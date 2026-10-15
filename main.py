@@ -1,39 +1,61 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from google import genai
-from google.genai import types
+# main.py
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
+from typing import List, Optional
 import os
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
+
+# Rate limiting imports
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+
+# Import compiled LangGraph workflow from graph subfolder
+from graph.graph import nexus_graph
 
 load_dotenv()
 
+# Initialize the rate limiter tracking requests by client IP address
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(
-    title="Career AI Assistant API (Gemini)",
-    description="A microservice powered by Google Gemini to handle inquiries about my professional background.",
+    title="NEXUS AI Agent API (LangGraph + RAG)",
+    description="A microservice powered by LangGraph, Pinecone, and Gemini to answer career inquiries for Manas Ranjan Sahoo.",
     version="1.0.0"
 )
 
-# Initialize the official Google GenAI client
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+# Register rate limiter into FastAPI app state
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# The core data grounding the AI
-SYSTEM_PROMPT = """
-You are the personal AI career assistant for Manas Ranjan Sahoo. 
-Your goal is to answer recruiter or networking questions professionally and concisely.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Vite local development port
+        "https://your-production-frontend-domain.com" # Your future deployed frontend URL
+    ],
+    # allow_origins=["*"],  # In production, replace "*" with your domain (e.g., "https://manassahoo.dev")
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-Context to use for answers:
-- Current Role: Senior Associate Technology at Publicis Sapient (since 2023).
-- Education: Enrolled in M.Tech in Data Science and AI at IIIT Dharwad.
-- Core Technical Skills: Java, Spring Boot, designing scalable microservices, backend systems, Python, and Applied Mathematics.
-- Previous Experience: Operated Arima Tours and Travels (logistics for East Coast Railway project, 2024-2025).
-- Tone: Professional, enthusiastic, and knowledgeable.
+# Mount static folder if serving frontend via FastAPI
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
-If asked about something not covered in this context, politely state that you only have information about his core professional background and suggest contacting him directly via LinkedIn.
-"""
+
+class MessageParam(BaseModel):
+    role: str
+    content: str
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(..., max_length=500, description="The user's chat prompt")
+    history: Optional[List[MessageParam]] = []
 
 
 class ChatResponse(BaseModel):
@@ -41,23 +63,47 @@ class ChatResponse(BaseModel):
 
 
 @app.post("/api/chat", response_model=ChatResponse)
-async def chat_with_assistant(request: ChatRequest):
-    if not request.message.strip():
+@limiter.limit("5/minute")
+async def chat_with_assistant(request: Request, body: ChatRequest):
+    if not body.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
 
+    # Format previous history turns into a single string for LangGraph
+    history_str = ""
+    if body.history:
+        turns = [f"{'User' if m.role == 'user' else 'NEXUS'}: {m.content}" for m in body.history]
+        history_str = "\n".join(turns)
+
     try:
-        # Using a free tier model with system instructions configured natively
-        response = client.models.generate_content(
-            model="gemini-3.8-flash",
-            contents=request.message,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                temperature=0.2,
-                max_output_tokens=300,
-            ),
-        )
-        return ChatResponse(reply=response.text)
+        # Prepare graph input state matching GraphState in graph/graph.py
+        inputs = {
+            "question": body.message,
+            "history": history_str
+        }
+
+        # Execute compiled LangGraph workflow
+        result = nexus_graph.invoke(inputs)
+        # Ensure the reply is strictly a string
+        raw_reply = result.get("response", "")
+        if isinstance(raw_reply, list):
+            reply_text = "".join(
+                item.get("text", "") if isinstance(item, dict) else str(item)
+                for item in raw_reply
+            )
+        else:
+            reply_text = str(raw_reply)
+
+        return ChatResponse(reply=reply_text)
 
     except Exception as e:
-        print(f"ERROR DETAILS: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to process the request.")
+        raise HTTPException(
+            status_code=500,
+            detail=f"An error occurred while processing your request: {str(e)}"
+        )
+
+
+@app.get("/")
+async def serve_frontend():
+    if os.path.exists("static/index.html"):
+        return FileResponse("static/index.html")
+    return {"message": "NEXUS API is running. Access /docs for API documentation."}

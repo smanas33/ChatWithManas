@@ -4,3 +4,11 @@ pydantic
 openai
 python-dotenv
 google-genai
+slowapi
+langchain
+langchain-google-genai
+langgraph
+langchain-community
+pinecone
+langchain-pinecone
+pypdf
