@@ -1,10 +1,7 @@
 # main.py
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import List, Optional
-import os
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -35,17 +32,12 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # Vite local development port
-        "https://your-production-frontend-domain.com" # Your future deployed frontend URL
+        "https://your-production-frontend-domain.com"  # Your future deployed frontend URL
     ],
-    # allow_origins=["*"],  # In production, replace "*" with your domain (e.g., "https://manassahoo.dev")
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Mount static folder if serving frontend via FastAPI
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 class MessageParam(BaseModel):
@@ -83,6 +75,7 @@ async def chat_with_assistant(request: Request, body: ChatRequest):
 
         # Execute compiled LangGraph workflow
         result = nexus_graph.invoke(inputs)
+
         # Ensure the reply is strictly a string
         raw_reply = result.get("response", "")
         if isinstance(raw_reply, list):
@@ -103,7 +96,10 @@ async def chat_with_assistant(request: Request, body: ChatRequest):
 
 
 @app.get("/")
-async def serve_frontend():
-    if os.path.exists("static/index.html"):
-        return FileResponse("static/index.html")
-    return {"message": "NEXUS API is running. Access /docs for API documentation."}
+async def root_health_check():
+    return {
+        "status": "online",
+        "service": "NEXUS AI Agent API",
+        "creator": "Manas Ranjan Sahoo",
+        "docs": "/docs"
+    }
