@@ -1,22 +1,15 @@
-# main.py
+# api/main.py
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from dotenv import load_dotenv
+import os
 from fastapi.middleware.cors import CORSMiddleware
 
-# Rate limiting imports
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
-
-# Import compiled LangGraph workflow from graph subfolder
-from graph.graph import nexus_graph
+# CRITICAL FIX 1: Updated the import path to absolute module reference for Vercel's serverless environment
+from api.graph.graph import nexus_graph
 
 load_dotenv()
-
-# Initialize the rate limiter tracking requests by client IP address
-limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
     title="NEXUS AI Agent API (LangGraph + RAG)",
@@ -24,15 +17,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Register rate limiter into FastAPI app state
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+# Get production URL from environment variable, default to localhost
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # Vite local development port
-        "https://your-production-frontend-domain.com"  # Your future deployed frontend URL
+        FRONTEND_URL              # Production ready URL (e.g. your React frontend Vercel domain)
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -55,7 +47,6 @@ class ChatResponse(BaseModel):
 
 
 @app.post("/api/chat", response_model=ChatResponse)
-@limiter.limit("5/minute")
 async def chat_with_assistant(request: Request, body: ChatRequest):
     if not body.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
@@ -103,3 +94,6 @@ async def root_health_check():
         "creator": "Manas Ranjan Sahoo",
         "docs": "/docs"
     }
+
+# CRITICAL FIX 2: Vercel serverless requires explicitly exposing the ASGI handler instance at the script root
+handler = app

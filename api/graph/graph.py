@@ -1,4 +1,3 @@
-
 import os
 from typing import TypedDict
 
@@ -12,40 +11,42 @@ from langgraph.graph import StateGraph, START, END
 
 load_dotenv()
 
-# 1. Initialize embeddings and Pinecone
-GOOGLE_API_KEY = (
-    os.getenv("GOOGLE_API_KEY")
-    or os.getenv("GEMINI_API_KEY")
-)
 
-if not GOOGLE_API_KEY:
-    raise ValueError("Google API key is missing from .env")
+# 1. Lazy loaders for serverless reliability
+def get_embeddings():
+    key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not key:
+        raise ValueError("Google API key is missing from environment variables")
+    return GoogleGenerativeAIEmbeddings(
+        model="gemini-embedding-001",
+        google_api_key=key,
+        output_dimensionality=768,
+    )
 
-INDEX_NAME = "nexus-resume-index"
 
-# Must match the model and dimension used in ingest.py.
-embeddings = GoogleGenerativeAIEmbeddings(
-    model="gemini-embedding-001",
-    google_api_key=GOOGLE_API_KEY,
-    output_dimensionality=768,
-)
+def get_retriever():
+    # Instantiating inside the request runtime prevents initialization timeout failures
+    pinecone_key = os.getenv("PINECONE_API_KEY")
+    if not pinecone_key:
+        raise ValueError("Pinecone API key is missing from environment variables")
 
-vectorstore = PineconeVectorStore(
-    index_name=INDEX_NAME,
-    embedding=embeddings,
-)
+    vectorstore = PineconeVectorStore(
+        index_name="nexus-resume-index",
+        embedding=get_embeddings(),
+        pinecone_api_key=pinecone_key
+    )
+    return vectorstore.as_retriever(search_kwargs={"k": 4})
 
-retriever = vectorstore.as_retriever(
-    search_kwargs={"k": 4}
-)
 
-# 2. Initialize Gemini chat model
-llm = ChatGoogleGenerativeAI(
-    model="gemini-3.5-flash-lite",
-    google_api_key=GOOGLE_API_KEY,
-)
+def get_llm():
+    key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    return ChatGoogleGenerativeAI(
+        model="gemini-3.5-flash-lite",
+        google_api_key=key,
+    )
 
-# 3. Define graph state
+
+# 2. Define graph state
 class GraphState(TypedDict):
     question: str
     history: str
@@ -53,32 +54,31 @@ class GraphState(TypedDict):
     response: str
 
 
-# 4. Retrieve relevant resume chunks from Pinecone
+# 3. Retrieve relevant resume chunks from Pinecone
 def retrieve_node(state: GraphState):
     question = state["question"]
 
+    # Secure runtime invocation
+    retriever = get_retriever()
     documents = retriever.invoke(question)
 
     if not documents:
         context = "No relevant resume information was found."
     else:
         context_parts = []
-
         for i, doc in enumerate(documents, start=1):
             source = doc.metadata.get("source", "Resume")
             page = doc.metadata.get("page", "Unknown")
-
             context_parts.append(
                 f"[Source {i}: {source}, page {page}]\n"
                 f"{doc.page_content}"
             )
-
         context = "\n\n".join(context_parts)
 
     return {"context": context}
 
 
-# 5. Generate a grounded answer using retrieved context
+# 4. Generate a grounded answer using retrieved context
 def generate_node(state: GraphState):
     question = state["question"]
     context = state.get("context", "")
@@ -87,10 +87,10 @@ def generate_node(state: GraphState):
     prompt = f"""
     You are NEXUS, an AI assistant that answers questions
     about Manas Ranjan Sahoo's professional profile.
-    
+
     Use the retrieved resume context as the source of truth
     for claims about his experience, skills, education, and projects.
-    
+
     Rules:
     - Do not invent qualifications, skills, or work experience.
     - If the context does not support an answer, say so clearly.
@@ -98,25 +98,24 @@ def generate_node(state: GraphState):
     - Do not claim that a skill or qualification exists unless
       it is supported by the retrieved context.
     - Answer the user's question directly and clearly.
-    
+
     Retrieved resume context:
     <context>
     {context}
     </context>
-    
+
     Previous conversation:
     {history}
-    
+
     User question:
     {question}
     """
 
+    llm = get_llm()
     response = llm.invoke(prompt)
 
-    # Safely extract text string regardless of return structure
     output_text = response.content
     if isinstance(output_text, list):
-        # Extract text from complex content blocks
         output_text = "".join(
             part.get("text", "") if isinstance(part, dict) else str(part)
             for part in output_text
@@ -125,7 +124,7 @@ def generate_node(state: GraphState):
     return {"response": str(output_text)}
 
 
-# 6. Build and compile the LangGraph workflow
+# 5. Build and compile the LangGraph workflow
 workflow = StateGraph(GraphState)
 
 workflow.add_node("retrieve", retrieve_node)
