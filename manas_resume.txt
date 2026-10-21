@@ -1,0 +1,155 @@
+MANAS RANJAN SAHOO
+Senior Associate Technology | Full Stack Java & AI Developer
+Present Address: Plot no-2078, Kalpana Square, Bhubaneswar, Odisha | +91-7276594010 | sahoo.manasranjan0@gmail.com
+
+PROFESSIONAL SUMMARY
+Full Stack Java and AI Developer with 9.6+ years of experience designing, developing, testing, deploying, and maintaining enterprise web applications, microservices, and agentic AI systems. Experienced in Java/J2EE, Spring Boot, REST APIs, GraphQL, Kafka, Python, FastAPI, and cloud-based application delivery. Specialized in AI Agent development, Retrieval-Augmented Generation (RAG) architectures, vector databases (Pinecone), LangChain, LangGraph agentic workflows, LLM guardrails, and MCP tool integrations. Hands-on experience with Microsoft Azure and AWS services, front-end development using React JS and web technologies, automated testing, CI/CD, application monitoring, and production issue resolution in Agile environments.
+
+TECHNICAL SKILLS
+AI, LLM and Agentic Frameworks: Python, LangGraph, LangChain, Retrieval-Augmented Generation (RAG), Vector Search (Pinecone), Guardrails, LangSmith, Model Context Protocol (MCP) Tools, Agentic Workflows
+Programming and backend: Java, Java 21, Java 8, Java/J2EE, Python, Spring Framework, Spring Boot, Java Stream API, FastAPI, object-oriented design, design patterns
+API and architecture: RESTful APIs, GraphQL, microservices architecture, CRUD services, event-driven systems, distributed services, AI Agent architecture
+Messaging and data: Apache Kafka, Azure Cosmos DB, MongoDB, MySQL, DynamoDB, Amazon S3
+Cloud and deployment: Microsoft Azure, Azure Application Insights, AWS (S3, DynamoDB, IAM, EC2), Pivotal Cloud Foundry (PCF), Vercel Serverless, Jenkins, CI/CD
+Testing and performance: JUnit 5, JUnit, Mockito, JMeter, unit testing, integration testing, performance testing, Test-Driven Development (TDD)
+Monitoring and tools: LangSmith, Dynatrace, Kibana, Grafana, GitHub, Maven, Gradle, Linux/Unix, Windows, Eclipse, IntelliJ IDEA, Rally, VersionOne
+Front-end and web: React JS, Vite, Streamlit, JavaScript, HTML5, CSS3, Thymeleaf, jQuery, Google Charts
+Ways of working: Agile methodologies, Scrum, code reviews, requirements analysis, production support, debugging, cross-functional collaboration
+
+PROFESSIONAL EXPERIENCE
+Senior Associate Technology | Publicis Sapient | Pune, India | October 2023 – Present
+- Design, develop, deploy, and maintain scalable cloud-based microservices and agentic AI systems in healthcare and enterprise domain functions.
+- Build secure, high-performance solutions using Java, Spring Boot, GraphQL, Python, FastAPI, LangGraph, RAG pipelines, and Microsoft Azure.
+
+Senior Project Engineer | Wipro Limited | Pune, Maharashtra, India | February 2021 – September 2023
+- Led cross-functional engineering delivery for complex projects, aligning work with timelines, industry standards, and client specifications.
+- Supported Agile practices to improve project visibility and responsiveness to changing requirements.
+- Mentored junior engineers and shared technical practices to support team capability and delivery quality.
+
+Senior Software Engineer | VFISLK Global Services | Bengaluru, Karnataka, India | January 2020 – January 2021
+- Developed and optimized backend services using Java and the Spring Framework to improve application responsiveness and reliability.
+- Worked with QA teams on testing protocols and software quality; corrected, modified, and upgraded software to improve performance.
+
+Software Engineer | Yash Technologies Pvt. Ltd. | Pune, Maharashtra, India | March 2017 – January 2020
+- Developed and maintained Java and Spring Framework applications with a focus on performance and reliability.
+- Collaborated with cross-functional teams in Agile delivery and contributed to unit and integration testing to improve code quality and reduce production defects.
+
+PROJECT EXPERIENCE
+
+1. Enterprise IT Support AI Agent
+Company: Publicis Sapient
+Client: In-house project
+Role: AI Developer (End-to-End)
+Period: May 2026 – September 2026
+Description: An enterprise IT support agent designed to streamline internal IT operations. Capable of creating support tickets, retrieving and updating ticket statuses, fetching employee details, retrieving hardware/asset details (e.g., laptop tags), and resolving common IT inquiries (such as password resets, VPN connection troubleshooting, and standard operating procedures).
+Technology stack: Python, FastAPI, Streamlit, RAG (Pinecone), LangChain, LangGraph, LangSmith, Guardrails, MCP (Model Context Protocol) Tools, MongoDB
+Key Responsibilities & Achievements:
+- Architected and built an end-to-end autonomous IT support agentic system using LangGraph and Python to handle multi-step workflows.
+- Implemented stateful tool calling via Model Context Protocol (MCP) tools for ticket creation, status updating, employee lookup, and asset management in MongoDB.
+- Developed a hybrid Retrieval-Augmented Generation (RAG) pipeline leveraging Pinecone vector store to instantly resolve common IT knowledge-base queries (password reset, VPN setup).
+- Integrated safety and domain guardrails along with LangSmith tracing for enterprise-grade observability, performance evaluation, and error logging.
+- Built an interactive user web interface using Streamlit connected to a high-throughput FastAPI backend serverless pipeline.
+
+2. NEXUS – AI Digital Twin & Personal Assistant
+Company: Personal / Portfolio (Showcased on LinkedIn)
+Client: N/A
+Role: AI Developer (End-to-End)
+Period: August 2026 – October 2026 (Ongoing / In Progress)
+Description: A production-ready AI Digital Twin and interactive assistant acting as Manas's personal career proxy. Interactively responds to inquiries regarding technical expertise, backend architecture, project history, and academic background using advanced RAG and conversational workflows.
+Technology stack: Python, FastAPI, React JS, Vite, RAG (Pinecone), LangChain, LangGraph, LangSmith, Guardrails, Vercel Serverless
+Key Responsibilities & Achievements:
+- Designed and engineered a full-stack AI digital twin application using a decoupled React (Vite) frontend and FastAPI/LangGraph backend.
+- Built a context-aware RAG pipeline using Google Gemini models and Pinecone vector database for strict factual precision against structured resume data.
+- Implemented modular graph orchestration using LangGraph to preserve conversation state, turn history, and query intent classification.
+- Enforced system safety with Guardrails and configured full-stack observability with LangSmith for agent execution analysis.
+- Deployed decoupled web frontend and serverless backend API to Vercel free tier, configuring dynamic CORS and environment variable integrations.
+
+3. HEMI – Pharmacy Order Management System
+Company: Publicis Sapient
+Client: OptumRx
+Role: Software Developer (Senior Associate Technology)
+Period: October 2023 – Present
+Description: A high-performance pharmacy order management platform for OptumRx that enables members to create, modify, cancel, and track prescription orders through a dedicated portal. The system streamlines data flow between multiple backend services and databases to ensure seamless order processing and real-time updates.
+Technology stack: Java 21, Spring Boot 3, GraphQL, Kafka, Azure Cosmos DB, REST APIs, Jenkins, GitHub, JUnit 5, Mockito, JMeter, Azure App Insights, Dynatrace, Microservices Architecture, CI/CD
+Key Responsibilities & Achievements:
+- Developed and maintained end-to-end microservices using Java 21, Spring Boot, GraphQL, and Kafka, enabling scalable and event-driven data flow between systems.
+- Designed and implemented APIs to handle order lifecycle events (creation, modification, cancellation) and integrated with Persistent Layers (PLs) for data consistency.
+- Integrated Azure Cosmos DB as a high-performance data layer, improving data fetch speeds by bypassing direct queries to the Iris SQL (InterSystems) database.
+- Designed and developed complex business logic using Java Stream APIs and advanced Java features, applying object-oriented design principles and design patterns (Singleton, Factory, Builder, Strategy).
+- Collaborated with QE teams to refine user stories, test scenarios, and validate feature functionality through JUnit 5 and Mockito-based unit and integration testing.
+- Partnered with DevOps teams during production deployments, resolved live issues, and conducted performance testing using JMeter for scalability and optimized throughput.
+- Contributed to cross-team communication between services handling members, prescriptions, providers, and claims through REST and GraphQL APIs, utilizing Dynatrace and Azure Application Insights for monitoring.
+
+4. VBRS – Value Based Reimbursement Service
+Company: Wipro Limited
+Client: Optum / UnitedHealth Group (UHG)
+Role: Full Stack Developer (Senior Project Engineer)
+Period: February 2021 – September 2023
+Description: A healthcare application under Optum (UHG) that automates and manages the end-to-end capitation and reimbursement process between insurers and healthcare providers using contracts, member data, and business factors.
+Technology stack: Java 8, Spring Boot, RESTful Web Services, Kafka, MySQL, JUnit, Mockito, Gradle, Jenkins, Linux, Agile Methodology
+Key Responsibilities & Achievements:
+- Designed and developed RESTful APIs using Java 8 and Spring Boot, enabling full CRUD functionality for contracts, members, and payment data.
+- Implemented complex business logic through reusable Java components and effectively used Collections (List, Set, Optional) for data handling and processing.
+- Built and maintained Kafka producers and consumers for real-time data streaming and asynchronous processing between distributed components.
+- Applied Test-Driven Development (TDD) practices using JUnit and Mockito, ensuring robust test coverage and high code quality.
+- Managed build and deployment using Maven, Gradle, and Jenkins, and participated in code reviews to maintain coding standards.
+- Collaborated closely with end users and business teams for requirement analysis, problem-solving, and validation of system functionalities in an Agile environment.
+
+5. Voya Financial – Retirement and Investment Management Platform
+Company: VFISLK Global Services
+Client: Voya Financial Inc. (USA)
+Role: Full Stack Developer (Senior Software Engineer)
+Period: January 2020 – January 2021
+Description: Development and maintenance of cloud-based microservices supporting digital retirement, investment, and insurance solutions (such as 401(k) and IRA plans) for Voya Financial Inc.
+Technology stack: Java, Spring Boot, Maven, Pivotal Cloud Foundry (PCF), Jenkins, Eclipse, IntelliJ IDEA
+Key Responsibilities & Achievements:
+- Developed and maintained RESTful APIs using Spring Boot for various retirement and investment plan services, handling account management, transaction processing, and portfolio data.
+- Utilized Maven for project build automation and deployed microservices on Pivotal Cloud Foundry (PCF) ensuring high availability and scalability.
+- Set up continuous integration and deployment pipelines using Jenkins for seamless delivery and configured application monitoring/centralized logging for PCF apps.
+- Optimized application performance through efficient cache region management and tuning while collaborating with cross-functional Agile teams.
+
+6. Solution Accelerator – Big Data ETL and Analytics Platform
+Company: Yash Technologies Pvt. Ltd.
+Client: John Deere
+Role: Full Stack Developer (Software Engineer)
+Period: March 2017 – January 2020
+Description: A web-based Big Data ETL and Analytics Platform developed for John Deere to simplify data integration, processing, and visualization through rich statistical dashboards.
+Technology stack: Java, Spring Boot, Thymeleaf, JavaScript, jQuery, HTML, CSS, AWS (S3, DynamoDB, IAM, EC2), Kibana, Grafana, Google Charts
+Key Responsibilities & Achievements:
+- Designed and developed end-to-end modules using Java and Spring Boot, ensuring scalable and maintainable backend services.
+- Built the web-based user interface using Thymeleaf, JavaScript, jQuery, HTML, and CSS for intuitive data interaction and visualization.
+- Integrated the platform with AWS services such as S3 for storage, DynamoDB for NoSQL data management, IAM for access control, and EC2 for application hosting.
+- Implemented data visualization components using Kibana, Grafana, and Google Charts to present real-time analytics and metrics.
+
+EDUCATION
+Master of Technology (M.Tech), Data Science and Artificial Intelligence
+IIIT Dharwad, India
+2026 – 2028
+
+Post Graduate Diploma, Advanced Computing
+Sunbeam Institute of Information Technology, Karad, India
+January 2017 | 24-week full-time course | Grade: A
+
+Bachelor of Technology (B.Tech), Computer Science and Engineering
+Biju Patnaik University of Technology, Bhubaneswar, India
+May 2014
+
+CERTIFICATIONS
+- Microsoft Certified: Azure Fundamentals (AZ-900) – October 2024
+- SCRUM Fundamentals Certified – SCRUMStudy
+
+AWARDS
+- Rising Star – Yash Technologies, December 2017
+
+LANGUAGES
+- English (C2 – Bilingual or Proficient)
+- Hindi (C2 – Bilingual or Proficient)
+- Marathi (B1 – Intermediate)
+- German (A1 – Beginner)
+- Odia
+
+HOBBIES
+- Watching Movies
+- Reading books
+- Gardening
+- Cooking
