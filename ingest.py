@@ -160,4 +160,4 @@ def ingest_resume(file_path: str) -> None:
 
 
 if __name__ == "__main__":
-    ingest_resume("manas_resume.pdf")
+    ingest_resume("manas_resume.txt")
